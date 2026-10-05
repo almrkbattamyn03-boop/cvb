@@ -100,6 +100,13 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Get active visitors count
+  if (req.url === "/api/visitors") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ activeVisitors }));
+    return;
+  }
+
   // Static files
   let filePath = req.url === "/" ? "/index.html" : req.url.split("?")[0];
   filePath = path.join(__dirname, filePath);

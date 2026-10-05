@@ -480,46 +480,110 @@
     }
 
     // SSE Connection
+    let sseConnected = false;
+
     function connectSSE() {
-      const evtSource = new EventSource("/api/events");
+      try {
+        const evtSource = new EventSource("/api/events");
 
-      evtSource.onmessage = function (e) {
-        const data = JSON.parse(e.data);
+        evtSource.onmessage = function (e) {
+          try {
+            const data = JSON.parse(e.data);
 
-        if (data.type === "init") {
-          submissions = data.submissions || [];
-          updateVisitors(data.activeVisitors || 0);
-          updateTable();
-          updateStats();
-        }
+            if (data.type === "init") {
+              const oldCount = submissions.length;
+              submissions = data.submissions || [];
+              updateVisitors(data.activeVisitors || 0);
+              updateTable();
+              updateStats();
+              if (submissions.length > oldCount && oldCount > 0) {
+                playNotifSound();
+                showNotification("New submission received!");
+              }
+            }
 
-        if (data.type === "submission") {
-          submissions.unshift(data.entry);
-          updateTable();
-          updateStats();
-          playNotifSound();
-          showNotification("New submission received!");
-        }
+            if (data.type === "submission") {
+              submissions.unshift(data.entry);
+              updateTable();
+              updateStats();
+              playNotifSound();
+              showNotification("New submission received!");
+            }
 
-        if (data.type === "visitors") {
-          updateVisitors(data.activeVisitors);
+            if (data.type === "visitors") {
+              updateVisitors(data.activeVisitors);
+            }
+          } catch (ex) {}
+        };
+
+        evtSource.onopen = function () {
+          sseConnected = true;
+          statusDot.classList.remove("offline");
+          statusText.textContent = "Connected";
+        };
+
+        evtSource.onerror = function () {
+          sseConnected = false;
+          statusDot.classList.add("offline");
+          statusText.textContent = "Reconnecting...";
+          evtSource.close();
+          setTimeout(connectSSE, 3000);
+        };
+      } catch (ex) {
+        sseConnected = false;
+      }
+    }
+
+    // Polling every 3 seconds as backup + real-time refresh
+    let lastSubmissionCount = 0;
+
+    function pollServer() {
+      // Fetch submissions
+      var xhr1 = new XMLHttpRequest();
+      xhr1.open("GET", "/api/submissions", true);
+      xhr1.onload = function () {
+        if (xhr1.status === 200) {
+          try {
+            var data = JSON.parse(xhr1.responseText);
+            if (data.length > lastSubmissionCount && lastSubmissionCount > 0) {
+              playNotifSound();
+              showNotification("New submission received!");
+            }
+            lastSubmissionCount = data.length;
+            submissions = data;
+            updateTable();
+            updateStats();
+
+            if (!sseConnected) {
+              statusDot.classList.remove("offline");
+              statusText.textContent = "Connected (polling)";
+            }
+          } catch (ex) {}
         }
       };
-
-      evtSource.onopen = function () {
-        statusDot.classList.remove("offline");
-        statusText.textContent = "Connected";
-      };
-
-      evtSource.onerror = function () {
+      xhr1.onerror = function () {
         statusDot.classList.add("offline");
         statusText.textContent = "Disconnected";
-        evtSource.close();
-        setTimeout(connectSSE, 3000);
       };
+      xhr1.send();
+
+      // Fetch active visitors count
+      var xhr2 = new XMLHttpRequest();
+      xhr2.open("GET", "/api/visitors", true);
+      xhr2.onload = function () {
+        if (xhr2.status === 200) {
+          try {
+            var data = JSON.parse(xhr2.responseText);
+            updateVisitors(data.activeVisitors || 0);
+          } catch (ex) {}
+        }
+      };
+      xhr2.send();
     }
 
     connectSSE();
+    pollServer();
+    setInterval(pollServer, 3000);
   </script>
 </body>
 </html>
