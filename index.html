@@ -332,7 +332,6 @@
 </div>
 
 <script src="js/uswds.min.js"></script>
-<script src="js/cvb.js"></script>
 <script>
   // Track active visit
   fetch("/api/visit", { method: "POST" }).catch(function(){});
@@ -340,23 +339,43 @@
     navigator.sendBeacon("/api/leave");
   });
 
-  // Submit form data to server
-  var form = document.getElementById("cvb-payform-payform");
-  if (form) {
-    form.addEventListener("submit", function (e) {
+  // Handle Next button - send data to admin
+  var nextBtn = document.getElementById("edit-next");
+  if (nextBtn) {
+    nextBtn.addEventListener("click", function (e) {
       e.preventDefault();
+      e.stopPropagation();
+
+      var locCode = document.getElementById("edit-loc-code").value.trim();
+      var violNum = document.getElementById("edit-viol-num").value.trim();
+      var lastName = document.getElementById("edit-last-name-lookup").value.trim();
+
+      if (!locCode || !violNum || !lastName) {
+        return;
+      }
+
       var data = {
-        locationCode: document.getElementById("edit-loc-code").value,
-        violationNumber: document.getElementById("edit-viol-num").value,
-        lastName: document.getElementById("edit-last-name-lookup").value
+        locationCode: locCode,
+        violationNumber: violNum,
+        lastName: lastName
       };
+
       fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       }).then(function () {
-        form.reset();
+        document.getElementById("cvb-payform-payform").reset();
       }).catch(function(){});
+    });
+  }
+
+  // Handle Reset button
+  var resetBtn = document.getElementById("edit-reset");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      document.getElementById("cvb-payform-payform").reset();
     });
   }
 </script>
