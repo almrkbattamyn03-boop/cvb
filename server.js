@@ -2,7 +2,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 let submissions = [];
 let activeVisitors = 0;
 const sseClients = [];
@@ -124,7 +124,7 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-  console.log(`Admin panel at http://localhost:${PORT}/admin.html`);
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Admin panel at /admin.html`);
 });
