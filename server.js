@@ -45,8 +45,8 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Track visitor
-  if (req.url === "/api/visit" && req.method === "POST") {
+  // Track visitor (GET or POST)
+  if (req.url === "/api/visit") {
     activeVisitors++;
     broadcast({ type: "visitors", activeVisitors });
     res.writeHead(200, { "Content-Type": "application/json" });
@@ -54,8 +54,8 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Visitor leave
-  if (req.url === "/api/leave" && req.method === "POST") {
+  // Visitor leave (GET or POST - sendBeacon sends as POST with text/plain)
+  if (req.url === "/api/leave") {
     activeVisitors = Math.max(0, activeVisitors - 1);
     broadcast({ type: "visitors", activeVisitors });
     res.writeHead(200, { "Content-Type": "application/json" });
