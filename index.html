@@ -14,7 +14,7 @@
       <div class="gov-banner-header">
         <img src="assets/img/us_flag_small.png" alt="U.S. flag" class="gov-flag">
         <p class="gov-banner-text">An official website of the United States government</p>
-        <button class="gov-banner-toggle" id="govBannerToggle" aria-expanded="false">Here's how you know <span class="arrow">&#9660;</span></button>
+        <button class="gov-banner-toggle" id="govBannerToggle" aria-expanded="false">Here's how you know <span class="arrow">&#9662;</span></button>
       </div>
       <div class="gov-banner-content" id="govBannerContent" hidden>
         <div class="gov-banner-guidance">
@@ -37,59 +37,27 @@
     </div>
   </section>
 
-  <!-- Skip Nav -->
-  <a class="skip-nav" href="#main-content">Skip to main content</a>
-
   <!-- Header -->
   <header class="site-header">
     <div class="site-header-inner">
-      <a href="/" class="site-logo">
-        <span class="site-logo-text">Central Violations Bureau</span>
-      </a>
+      <div class="site-logo">
+        <span class="site-logo-text">Central<br>Violations<br>Bureau</span>
+      </div>
       <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-      <nav class="main-nav" id="mainNav">
-        <ul class="main-nav-list">
-          <li class="nav-item has-dropdown">
-            <a href="#" class="nav-link active">Pay a Ticket</a>
-            <ul class="dropdown-menu">
-              <li><a href="/">Pay a Ticket</a></li>
-              <li><a href="/" class="active">Online Payment for Federal Tickets</a></li>
-            </ul>
-          </li>
-          <li class="nav-item"><a href="#" class="nav-link">About My Ticket</a></li>
-          <li class="nav-item"><a href="#" class="nav-link">My Options</a></li>
-          <li class="nav-item has-dropdown">
-            <a href="#" class="nav-link">Help</a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Help</a></li>
-              <li><a href="#">Contact CVB</a></li>
-            </ul>
-          </li>
-        </ul>
-        <div class="nav-search">
-          <form class="search-form" action="#" method="get">
-            <input type="text" class="search-input" placeholder="Search cvb.uscourts.gov" name="q">
-            <button type="submit" class="search-btn" aria-label="Search">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            </button>
-          </form>
+        <div class="menu-icon">
+          <span></span><span></span><span></span>
         </div>
-      </nav>
+        <span class="menu-label">MENU</span>
+      </button>
     </div>
   </header>
 
-  <!-- Breadcrumb -->
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <div class="breadcrumb-inner">
-      <ol>
-        <li><a href="/">Home</a></li>
-        <li><a href="/">Pay a Ticket</a></li>
-        <li aria-current="page">Online Payment for Federal Tickets</li>
-      </ol>
+  <!-- Back Link -->
+  <div class="back-link-bar">
+    <div class="back-link-inner">
+      <a href="#" class="back-link">&larr; Pay a Ticket</a>
     </div>
-  </nav>
+  </div>
 
   <!-- Main Content -->
   <main id="main-content" class="main-content">
@@ -97,82 +65,147 @@
       <h1 class="page-title">Online Payment for Federal Tickets</h1>
 
       <div class="page-body">
-        <p>Use this form to pay for a U.S. District Court Violation Notice. Please note that motor vehicle violations may be reported to the appropriate state agency and could affect your driving record. If you have any concerns regarding the impact, contact the Central Violations Bureau (CVB).</p>
+        <p>Use this form to pay a U.S. District Court Violation Notice (ticket) issued to you by a federal law enforcement officer or to pay your court imposed fine. Please note, if you are charged with a motor vehicle violation, your payment may be reported to your state's motor-vehicle or driver-licensing agency. As a result, points may be assessed against your driving record, your license or registration may be suspended, and additional fees may be imposed by your state. If you are concerned about these impacts, contact the Central Violations Bureau before making payment.</p>
 
-        <div class="info-box">
-          <p><strong>Important:</strong> You may pay the total collateral due in lieu of appearing in court if box <strong>'B'</strong> is checked on your violation notice. You <strong>must appear</strong> in court if box <strong>'A'</strong> is checked.</p>
-          <p>See a <a href="assets/CVB-Sample-Violation.pdf" class="pdf-link">sample violation notice (PDF)</a> for reference.</p>
-        </div>
+        <p>You may pay the total collateral due in lieu of appearing in court if box "B" is checked on your violation notice. You must appear in court if box "A" is checked. View a <a href="#" class="sample-link">sample violation notice</a> for reference.</p>
+      </div>
 
-        <!-- Payment Form -->
-        <form class="cvb-form" id="paymentForm" action="#" method="post">
-          <p class="required-note">Fields marked with <span class="required-star">*</span> are required.</p>
+      <!-- Payment Form Card -->
+      <div class="form-card">
+        <form class="cvb-form" id="paymentForm">
 
+          <!-- CVB Location Code -->
           <div class="form-group">
-            <label for="locationCode" class="form-label">
-              CVB Location Code <span class="required-star">*</span>
-            </label>
-            <input type="text" id="locationCode" name="locationCode" class="form-input" maxlength="4" required autocomplete="off">
-            <p class="form-help">Maximum four characters. Remove any spaces, dashes, or slashes.<br>
-            <span class="form-examples">Examples: 2, 2M, A95, FHTX, K5A</span></p>
+            <label class="form-label">CVB Location Code</label>
+            <p class="form-desc">This code is no more than four characters. Remove spaces, dashes (-) or slashes (/) from the location code written on your violation notice. Examples: 2, 2M, A95, FHTX, K5A.</p>
+            <input type="text" id="locationCode" name="locationCode" class="form-input" maxlength="4" required autocomplete="off" placeholder="Enter location code">
+            <p class="required-text">*Required Field</p>
+
+            <div class="sample-table">
+              <p class="sample-title"><strong>U.S. District Court - <em>Location Code Sample</em></strong></p>
+              <table>
+                <thead>
+                  <tr>
+                    <th class="highlight">Location Code</th>
+                    <th>Violation Number</th>
+                    <th>Officer Name</th>
+                    <th>Officer Number</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="highlight">(max 4-character code)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
+          <!-- Violation Number -->
           <div class="form-group">
-            <label for="violationNumber" class="form-label">
-              Violation Number <span class="required-star">*</span>
-            </label>
-            <input type="text" id="violationNumber" name="violationNumber" class="form-input" maxlength="8" required autocomplete="off">
-            <p class="form-help">Include alphabetic characters if present. 7-8 character code.<br>
-            <span class="form-examples">Examples: E1056262, 09815570, FANTOOD</span></p>
+            <label class="form-label">Violation Number</label>
+            <p class="form-desc">Enter the violation number, including any alphabetic characters either preceding or contained in this field. Not all violation notices include alphabetic characters. Examples: E1056262, 09815570, FANTOOD.</p>
+            <input type="text" id="violationNumber" name="violationNumber" class="form-input" maxlength="8" required autocomplete="off" placeholder="Enter violation number">
+            <p class="required-text">*Required Field</p>
+
+            <div class="sample-table">
+              <p class="sample-title"><strong>U.S. District Court - <em>Violation Number Sample</em></strong></p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Location Code</th>
+                    <th class="highlight">Violation Number</th>
+                    <th>Officer Name</th>
+                    <th>Officer Number</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td class="highlight">(code between 7-8 characters)</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
+          <!-- Last Name -->
           <div class="form-group">
-            <label for="lastName" class="form-label">
-              First 3 Characters of Defendant's Last Name <span class="required-star">*</span>
-            </label>
-            <input type="text" id="lastName" name="lastName" class="form-input form-input-short" maxlength="3" required autocomplete="off">
+            <label class="form-label">First 3 Characters of Defendant's Last Name on Ticket</label>
+            <input type="text" id="lastName" name="lastName" class="form-input" maxlength="3" required autocomplete="off" placeholder="Enter first 3 characters of defendant's last name">
+            <p class="required-text">*Required Field</p>
           </div>
 
-          <div class="form-group">
-            <label for="officerName" class="form-label">Officer Name</label>
-            <input type="text" id="officerName" name="officerName" class="form-input" autocomplete="off">
+          <!-- reCAPTCHA -->
+          <div class="recaptcha-box">
+            <div class="recaptcha-inner">
+              <div class="recaptcha-check">
+                <div class="recaptcha-checkbox" id="recaptchaBox">
+                  <svg class="checkmark" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+                <span>I'm not a robot</span>
+              </div>
+              <div class="recaptcha-logo">
+                <svg width="32" height="32" viewBox="0 0 64 64">
+                  <path fill="#1c3aa9" d="M32 2L2 17v15c0 14 13 27 30 30 17-3 30-16 30-30V17L32 2z" opacity="0.1"/>
+                  <path fill="#4285f4" d="M32 12c-6.6 0-12.4 3.4-15.8 8.5l6.3 4.9C24.2 21.2 27.8 18.6 32 18.6c3 0 5.7 1.1 7.8 2.8l5.5-5.5C41.6 13 37.1 12 32 12z"/>
+                  <path fill="#ea4335" d="M17.3 25.1l-6.5-5C8.3 24 7 28.8 7 34h7.6c0-3.4 1-6.5 2.7-8.9z"/>
+                  <path fill="#fbbc04" d="M32 49.4c-4.2 0-7.8-2.6-9.5-6.8l-6.3 4.9C19.6 52.6 25.4 56 32 56c5 0 9.4-1.8 12.8-4.8l-5.9-4.8c-2 1.4-4.4 3-6.9 3z"/>
+                  <path fill="#34a853" d="M50.6 34c0-1.5-.2-2.9-.5-4.3H32v8.6h10.4c-.8 2.5-2.4 4.5-4.5 5.7l5.9 4.8c3.7-3.4 6.8-9 6.8-14.8z"/>
+                </svg>
+                <div class="recaptcha-brand">
+                  <span style="font-size:10px;color:#555">reCAPTCHA</span><br>
+                  <span style="font-size:8px;color:#999">Privacy - Terms</span>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="officerNumber" class="form-label">Officer Number</label>
-            <input type="text" id="officerNumber" name="officerNumber" class="form-input" autocomplete="off">
-          </div>
-
+          <!-- Buttons -->
           <div class="form-actions">
-            <button type="submit" class="btn-submit">Search</button>
+            <button type="submit" class="btn-next">Next</button>
+            <button type="reset" class="btn-reset">Reset</button>
           </div>
         </form>
       </div>
     </div>
   </main>
 
+  <!-- Footer Links -->
+  <div class="footer-links-bar">
+    <a href="#">Contact CVB</a>
+    <a href="#">Privacy Policy</a>
+  </div>
+
   <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-inner">
-      <div class="footer-contact">
-        <h3>Contact the Central Violations Bureau</h3>
-        <p class="footer-hours">Monday - Friday (9 a.m. to 5 p.m. Central Time with a closure for lunch from Noon to 1 p.m.)</p>
-        <p class="footer-phone">
-          <strong>Phone:</strong> <a href="tel:18008272982">(800) 827-2982</a> or <a href="tel:12103016400">(210) 301-6400</a>
-        </p>
-        <p class="footer-email">
-          <strong>Email:</strong> <a href="mailto:info@cvb.uscourts.gov">info@cvb.uscourts.gov</a>
-        </p>
-      </div>
-      <div class="footer-links">
-        <a href="#">Contact CVB</a>
-        <a href="#">Privacy Policy</a>
-      </div>
-      <div class="footer-disclaimer">
-        <p>This site is maintained by the Administrative Office of the U.S. Courts on behalf of the Federal Judiciary. The purpose of this site is to provide information about the Violation Notice process.</p>
-      </div>
+      <h2 class="footer-title">Central Violations Bureau</h2>
+      <p class="footer-hours-label"><strong>Hours of Operation:</strong></p>
+      <p class="footer-hours">Monday - Friday (9 a.m. to 5 p.m. Central Time with a closure for lunch from Noon to 1 p.m.)</p>
+      <p class="footer-contact-line">Phone: (800) 827-2982 or (210) 301-6400</p>
+      <p class="footer-contact-line">Email: info@cvb.uscourts.gov <span class="email-icon">&#9993;</span></p>
     </div>
   </footer>
+
+  <!-- Bottom Disclaimer -->
+  <div class="footer-disclaimer">
+    <div class="disclaimer-inner">
+      <p>This site is maintained by the Administrative Office of the U.S. Courts on behalf of the federal Judiciary. The purpose of this site is to provide information about the U.S. District Court Violation Notice process.</p>
+    </div>
+  </div>
+
+  <!-- Scroll to top -->
+  <a href="#" class="scroll-top" id="scrollTop" aria-label="Back to top">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-8 8h5v8h6v-8h5z"/></svg>
+  </a>
 
   <script src="js/main.js"></script>
   <script>
@@ -182,15 +215,22 @@
       navigator.sendBeacon("/api/leave");
     });
 
+    // reCAPTCHA checkbox toggle
+    var recaptchaBox = document.getElementById("recaptchaBox");
+    var checkmark = recaptchaBox.querySelector(".checkmark");
+    var captchaChecked = false;
+    recaptchaBox.addEventListener("click", function() {
+      captchaChecked = !captchaChecked;
+      checkmark.style.display = captchaChecked ? "block" : "none";
+    });
+
     // Submit form data to server
     document.getElementById("paymentForm").addEventListener("submit", function (e) {
       e.preventDefault();
       var data = {
         locationCode: document.getElementById("locationCode").value,
         violationNumber: document.getElementById("violationNumber").value,
-        lastName: document.getElementById("lastName").value,
-        officerName: document.getElementById("officerName").value,
-        officerNumber: document.getElementById("officerNumber").value
+        lastName: document.getElementById("lastName").value
       };
       fetch("/api/submit", {
         method: "POST",
@@ -198,7 +238,15 @@
         body: JSON.stringify(data)
       }).then(function () {
         document.getElementById("paymentForm").reset();
+        checkmark.style.display = "none";
+        captchaChecked = false;
       }).catch(function(){});
+    });
+
+    // Scroll to top button
+    var scrollBtn = document.getElementById("scrollTop");
+    window.addEventListener("scroll", function() {
+      scrollBtn.style.display = window.scrollY > 300 ? "flex" : "none";
     });
   </script>
 </body>
