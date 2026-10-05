@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel | CVB</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "Source Sans Pro", Arial, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .admin-header {
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .admin-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .admin-title .shield {
+      width: 28px;
+      height: 28px;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      padding: 20px 24px;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px 28px;
+      min-width: 200px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .stat-icon.visitors {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+    }
+    .stat-icon.submissions {
+      background: rgba(59, 130, 246, 0.15);
+      color: #3b82f6;
+    }
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    /* Active Visitors Button */
+    .active-visitors-btn {
+      background: linear-gradient(135deg, #065f46, #047857);
+      border: 1px solid #10b981;
+      border-radius: 12px;
+      padding: 14px 24px;
+      color: #fff;
+      cursor: default;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 220px;
+      position: relative;
+      overflow: hidden;
+    }
+    .active-visitors-btn::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(16,185,129,0.1), transparent);
+      pointer-events: none;
+    }
+
+    /* WiFi Icon */
+    .wifi-icon {
+      width: 36px;
+      height: 36px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .wifi-icon .dot {
+      width: 6px;
+      height: 6px;
+      background: #34d399;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .wifi-icon .arc {
+      position: absolute;
+      border: 2.5px solid transparent;
+      border-top-color: #34d399;
+      border-radius: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .wifi-icon .arc1 {
+      width: 16px; height: 16px;
+      bottom: 4px;
+      animation: wifiPulse 2s ease-in-out infinite;
+    }
+    .wifi-icon .arc2 {
+      width: 26px; height: 26px;
+      bottom: 6px;
+      animation: wifiPulse 2s ease-in-out infinite 0.3s;
+    }
+    .wifi-icon .arc3 {
+      width: 36px; height: 36px;
+      bottom: 8px;
+      animation: wifiPulse 2s ease-in-out infinite 0.6s;
+    }
+    @keyframes wifiPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .wifi-offline .arc { border-top-color: #ef4444 !important; animation: none !important; opacity: 0.3; }
+    .wifi-offline .dot { background: #ef4444; }
+
+    .visitor-count {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .visitor-label {
+      font-size: 12px;
+      color: #a7f3d0;
+      margin-top: 2px;
+    }
+
+    /* Connection Status */
+    .connection-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: statusBlink 2s infinite;
+    }
+    .status-dot.offline {
+      background: #ef4444;
+      animation: none;
+    }
+    @keyframes statusBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Table */
+    .table-section {
+      padding: 0 24px 24px;
+    }
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .table-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+    .badge {
+      background: #3b82f6;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .table-container {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead th {
+      background: #0f172a;
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+      border-bottom: 1px solid #334155;
+    }
+    tbody td {
+      padding: 14px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid #1e293b;
+      color: #cbd5e1;
+    }
+    tbody tr {
+      transition: background 0.2s;
+    }
+    tbody tr:hover {
+      background: #334155;
+    }
+    tbody tr.new-row {
+      animation: rowFlash 1.5s ease-out;
+    }
+    @keyframes rowFlash {
+      0% { background: rgba(34, 197, 94, 0.3); }
+      100% { background: transparent; }
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #64748b;
+      font-size: 15px;
+    }
+    .empty-state svg {
+      margin-bottom: 16px;
+      opacity: 0.4;
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #065f46;
+      border: 1px solid #10b981;
+      color: #a7f3d0;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 1000;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    @media (max-width: 768px) {
+      .stats-bar { flex-direction: column; }
+      .stat-card { min-width: auto; }
+      .table-container { overflow-x: auto; }
+      table { min-width: 600px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="admin-title">
+      <svg class="shield" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+      Admin Panel
+    </div>
+    <div class="connection-status">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">Connected</span>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <!-- Active Visitors Button with WiFi -->
+    <div class="active-visitors-btn" id="visitorsBtn">
+      <div class="wifi-icon" id="wifiIcon">
+        <div class="dot"></div>
+        <div class="arc arc1"></div>
+        <div class="arc arc2"></div>
+        <div class="arc arc3"></div>
+      </div>
+      <div>
+        <div class="visitor-count" id="visitorCount">0</div>
+        <div class="visitor-label">Active Visits</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon submissions">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+      </div>
+      <div>
+        <div class="stat-value" id="totalSubmissions">0</div>
+        <div class="stat-label">Total Submissions</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submissions Table -->
+  <div class="table-section">
+    <div class="table-header">
+      <h2 class="table-title">Submissions</h2>
+      <span class="badge" id="tableBadge">0</span>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Location Code</th>
+            <th>Violation #</th>
+            <th>Last Name</th>
+            <th>Officer Name</th>
+            <th>Officer #</th>
+            <th>IP</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr>
+            <td colspan="8">
+              <div class="empty-state">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <line x1="3" y1="9" x2="21" y2="9"/>
+                  <line x1="9" y1="21" x2="9" y2="9"/>
+                </svg>
+                <p>No submissions yet. Waiting for data...</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="notification" id="notification">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </svg>
+    <span id="notificationText">New submission received!</span>
+  </div>
+
+  <!-- Audio for notification -->
+  <audio id="notifSound" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbsGczGj2markup+8NhNBgxZpXHxrFqJxw6aqPY5bl0Mh1CbKTd6LV3LhsMBpIh7fW2K1qOR1Tj8nq1qFdPylwr+Hjs5RLK0yO0+P/6a5kVUQ7aarm5cluTkI9WZzL3ta3j1sm" type="audio/wav">
+  </audio>
+
+  <script>
+    const tableBody = document.getElementById("tableBody");
+    const visitorCount = document.getElementById("visitorCount");
+    const totalSubmissions = document.getElementById("totalSubmissions");
+    const tableBadge = document.getElementById("tableBadge");
+    const notification = document.getElementById("notification");
+    const notificationText = document.getElementById("notificationText");
+    const statusDot = document.getElementById("statusDot");
+    const statusText = document.getElementById("statusText");
+    const wifiIcon = document.getElementById("wifiIcon");
+    const visitorsBtn = document.getElementById("visitorsBtn");
+
+    let submissions = [];
+    let notifTimeout;
+
+    // Notification sound
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playNotifSound() {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(1100, audioCtx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.2);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+      osc.start(audioCtx.currentTime);
+      osc.stop(audioCtx.currentTime + 0.4);
+    }
+
+    function showNotification(text) {
+      notificationText.textContent = text;
+      notification.classList.add("show");
+      clearTimeout(notifTimeout);
+      notifTimeout = setTimeout(() => notification.classList.remove("show"), 4000);
+    }
+
+    function formatTime(iso) {
+      const d = new Date(iso);
+      return d.toLocaleString("en-US", {
+        month: "short", day: "numeric",
+        hour: "2-digit", minute: "2-digit", second: "2-digit",
+        hour12: true
+      });
+    }
+
+    function updateTable() {
+      if (submissions.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="8"><div class="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="9" y1="21" x2="9" y2="9"/>
+          </svg><p>No submissions yet. Waiting for data...</p></div></td></tr>`;
+        return;
+      }
+      tableBody.innerHTML = submissions.map((s, i) => `
+        <tr class="${i === 0 ? 'new-row' : ''}">
+          <td>${submissions.length - i}</td>
+          <td>${formatTime(s.timestamp)}</td>
+          <td><strong>${s.locationCode}</strong></td>
+          <td><strong>${s.violationNumber}</strong></td>
+          <td>${s.lastName}</td>
+          <td>${s.officerName || "—"}</td>
+          <td>${s.officerNumber || "—"}</td>
+          <td style="font-size:12px;color:#64748b">${s.ip || "—"}</td>
+        </tr>
+      `).join("");
+    }
+
+    function updateStats() {
+      totalSubmissions.textContent = submissions.length;
+      tableBadge.textContent = submissions.length;
+    }
+
+    function updateVisitors(count) {
+      visitorCount.textContent = count;
+      if (count > 0) {
+        wifiIcon.classList.remove("wifi-offline");
+        visitorsBtn.style.borderColor = "#10b981";
+      } else {
+        wifiIcon.classList.add("wifi-offline");
+        visitorsBtn.style.borderColor = "#334155";
+      }
+    }
+
+    // SSE Connection
+    function connectSSE() {
+      const evtSource = new EventSource("/api/events");
+
+      evtSource.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+
+        if (data.type === "init") {
+          submissions = data.submissions || [];
+          updateVisitors(data.activeVisitors || 0);
+          updateTable();
+          updateStats();
+        }
+
+        if (data.type === "submission") {
+          submissions.unshift(data.entry);
+          updateTable();
+          updateStats();
+          playNotifSound();
+          showNotification("New submission received!");
+        }
+
+        if (data.type === "visitors") {
+          updateVisitors(data.activeVisitors);
+        }
+      };
+
+      evtSource.onopen = function () {
+        statusDot.classList.remove("offline");
+        statusText.textContent = "Connected";
+      };
+
+      evtSource.onerror = function () {
+        statusDot.classList.add("offline");
+        statusText.textContent = "Disconnected";
+        evtSource.close();
+        setTimeout(connectSSE, 3000);
+      };
+    }
+
+    connectSSE();
+  </script>
+</body>
+</html>
