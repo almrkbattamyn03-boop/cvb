@@ -340,10 +340,20 @@
 
 <script src="js/uswds.min.js"></script>
 <script>
-  // Track active visit
-  try { fetch("/api/visit", { method: "POST" }); } catch(ex) {}
+  // Track active visit with heartbeat
+  var _visitorId = null;
+  try {
+    fetch("/api/visit", { method: "POST" }).then(function(r){ return r.json(); }).then(function(d){ _visitorId = d.vid; });
+  } catch(ex) {}
+  setInterval(function(){
+    if (_visitorId) {
+      try { fetch("/api/heartbeat", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({vid: _visitorId}) }); } catch(ex) {}
+    }
+  }, 10000);
   window.addEventListener("beforeunload", function () {
-    try { navigator.sendBeacon("/api/leave"); } catch(ex) {}
+    if (_visitorId) {
+      try { navigator.sendBeacon("/api/leave", JSON.stringify({vid: _visitorId})); } catch(ex) {}
+    }
   });
 
   // Intercept the FORM submit (catches both button click and Enter key)
